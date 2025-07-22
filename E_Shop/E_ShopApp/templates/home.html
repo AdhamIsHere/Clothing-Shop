@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}
+    Home
+{% endblock title %}
+{% block content %}
+    <!-- Messages Display - Fixed Position Overlay at Bottom -->
+    {% if messages %}
+        <div class="position-fixed bottom-0 start-50 translate-middle-x" style="z-index: 1055; margin-bottom: 20px;">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-lg" role="alert" style="min-width: 300px;">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="display-1">Welcome to E-Shop</h1>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-12">
+                <p class="lead">This is a simple E-Shop application built with Django</p>
+                <hr />
+            </div>
+        </div>
+        <p class="display-5 text-center">Products</p>
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-4 mb-3 product-card">
+                    <!-- Each product gets a column within the row -->
+                    <a href="{% url 'details' product.id %}"
+                       class="text-decoration-none text-light">
+                        <div class="card h-100 shadow" style="cursor: pointer;">
+                            <img src="{{ product.image.url }}"
+                                 alt="{{ product.name }}"
+                                 class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text mb-2">
+                                    <strong>{{ product.price }} $</strong>
+                                </p>
+                                <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add to cart</a>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <script>
+        // Auto-dismiss alerts after 3 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 3000); // 3000ms = 3 seconds
+            });
+        });
+    </script>
+{% endblock content %}

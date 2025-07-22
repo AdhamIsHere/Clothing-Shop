@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+{% block title %}
+    Profile
+{% endblock title %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4 text-center">User Profile</h1>
+            
+            <!-- User Information Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user"></i> Personal Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="card-text">
+                                <strong>First Name:</strong> 
+                                <span class="text-muted">{{ user.first_name|default:"Not provided" }}</span>
+                            </p>
+                            <p class="card-text">
+                                <strong>Last Name:</strong> 
+                                <span class="text-muted">{{ user.last_name|default:"Not provided" }}</span>
+                            </p>
+                            <p class="card-text">
+                                <strong>Username:</strong> 
+                                <span class="text-muted">{{ user.username }}</span>
+                            </p>
+                            <p class="card-text">
+                                <strong>Email:</strong> 
+                                <span class="text-muted">{{ user.email|default:"Not provided" }}</span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="card-text">
+                                <strong>Phone:</strong> 
+                                <span class="text-muted">{{ user.profile.phone|default:"Not provided" }}</span>
+                            </p>
+                            <p class="card-text">
+                                <strong>Country:</strong> 
+                                <span class="text-muted">{{ user.profile.country|default:"Not specified" }}</span>
+                            </p>
+                            <p class="card-text">
+                                <strong>City:</strong> 
+                                <span class="text-muted">{{ user.profile.city|default:"Not specified" }}</span>
+                            </p>
+                            <p class="card-text">
+                                <strong>Address:</strong> 
+                                <span class="text-muted">{{ user.profile.address|default:"Not provided" }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <p class="card-text">
+                                <strong>Member Since:</strong> 
+                                <span class="text-muted">{{ user.date_joined|date:"F d, Y" }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Account Statistics Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-bar"></i> Account Statistics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="border-end">
+                                <h4 class="text-primary">{{ orders_count|default:"0" }}</h4>
+                                <p class="text-muted mb-0">Total Orders</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="border-end">
+                                <h4 class="text-success">${{ total_spent|default:"0.00" }}</h4>
+                                <p class="text-muted mb-0">Total Spent</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h4 class="text-info">{{ cart_items|default:"0" }}</h4>
+                            <p class="text-muted mb-0">Items in Cart</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions Card -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-cog"></i> Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'cart' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-shopping-cart"></i> View Cart
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'home' %}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-shopping-bag"></i> Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

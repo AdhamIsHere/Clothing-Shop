@@ -1,0 +1,5 @@
+*.pyc
+*.pyo
+__pycache__/
+*.pyddb.sqlite3
+E_Shop/media/*
