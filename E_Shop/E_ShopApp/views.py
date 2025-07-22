@@ -76,14 +76,11 @@ def profile_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     
-    # Get the user profile information
     user = request.user
     
-    # Get cart statistics
     cart = request.session.get('cart', {})
     cart_items_count = sum(cart.values()) if cart else 0
     
-    # Calculate total spent from past orders
     profile = Profile.objects.filter(user=user).first()
     
     from decimal import Decimal
@@ -141,7 +138,6 @@ def add_to_cart(request, product_id):
     request.session.modified = True
     product = GetOrSetProductCache(product_id)
     messages.success(request, f'{product.name} added to cart successfully')
-    # stay on the same page after adding to cart
     return redirect(request.META.get('HTTP_REFERER', 'home'))
 
 
@@ -216,18 +212,15 @@ def checkout_view(request):
         except (Product.DoesNotExist, ValueError):
             continue
     
-    # Get or create user profile
     profile = Profile.objects.filter(user=request.user).first()
     
     if request.method == 'POST':
-        # Handle checkout form submission
         profile.phone = request.POST.get('phone', '')
         profile.country = request.POST.get('country', '')
         profile.city = request.POST.get('city', '')
         profile.address = request.POST.get('address', '')
         profile.save()
         
-        # Here you would typically:
         # 1. Create an Order object
         order = Order.objects.create(user=profile, status='P')
         for item in cart_items:
@@ -237,7 +230,7 @@ def checkout_view(request):
         order.save()
         # 2. Process payment
         # 3. Clear the cart
-        # For now, we'll just clear the cart and show success
+        # for now just clear the cart and show success
         
         request.session['cart'] = {}
         request.session.modified = True
