@@ -28,27 +28,67 @@
             </div>
         </div>
         <p class="display-5 text-center">Products</p>
+        
+        <!-- Category Filter Section -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label for="cat-sel" class="form-label">Filter by Category:</label>
+                <form method="GET" action="{% url 'home' %}">
+                    <div class="input-group">
+                        <select id="cat-sel" name="category" class="form-select" onchange="this.form.submit()">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>
+                                    {{ category }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        {% if selected_category %}
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary">Clear Filter</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
         <div class="row">
-            {% for product in products %}
-                <div class="col-md-4 mb-3 product-card">
-                    <!-- Each product gets a column within the row -->
-                    <a href="{% url 'details' product.id %}"
-                       class="text-decoration-none text-light">
-                        <div class="card h-100 shadow" style="cursor: pointer;">
-                            <img src="{{ product.image.url }}"
-                                 alt="{{ product.name }}"
-                                 class="card-img-top">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ product.name }}</h5>
-                                <p class="card-text mb-2">
-                                    <strong>{{ product.price }} $</strong>
-                                </p>
-                                <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add to cart</a>
+            {% if products %}
+                {% for product in products %}
+                    <div class="col-md-4 mb-3 product-card">
+                        <a href="{% url 'details' product.id %}"
+                           class="text-decoration-none text-light">
+                            <div class="card h-100 shadow" style="cursor: pointer;">
+                                <img src="{{ product.image.url }}"
+                                     alt="{{ product.name }}"
+                                     class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ product.name }}</h5>
+                                    <p class="card-text mb-2">
+                                        <small class="text-muted">{{ product.category }}</small>
+                                    </p>
+                                    <p class="card-text mb-2">
+                                        <strong>{{ product.price }} $</strong>
+                                    </p>
+                                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add to cart</a>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        <h5>No products found</h5>
+                        {% if selected_category %}
+                            <p>No products available in "{{ selected_category }}" category.</p>
+                            <a href="{% url 'home' %}" class="btn btn-primary">View All Products</a>
+                        {% else %}
+                            <p>No products are currently available.</p>
+                        {% endif %}
+                    </div>
                 </div>
-            {% endfor %}
+            {% endif %}
         </div>
     </div>
     
@@ -60,7 +100,7 @@
                 setTimeout(function() {
                     const bsAlert = new bootstrap.Alert(alert);
                     bsAlert.close();
-                }, 3000); // 3000ms = 3 seconds
+                }, 3000);
             });
         });
     </script>

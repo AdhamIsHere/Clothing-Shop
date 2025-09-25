@@ -11,9 +11,24 @@ from .models import *
 
 # Create your views here.
 def home_view(request):
-    products = Product.objects.all()
-    return render(request, 'home.html',{'products':products})
-
+    # Get the selected category from GET parameters
+    selected_category = request.GET.get('category', '')
+    
+    # Get all products or filter by category
+    if selected_category:
+        products = Product.objects.filter(category=selected_category)
+    else:
+        products = Product.objects.all()
+    
+    # Get all unique categories for the dropdown
+    categories = Product.objects.values_list('category', flat=True).distinct().order_by('category')
+    
+    context = {
+        'products': products,
+        'categories': categories,
+        'selected_category': selected_category,
+    }
+    return render(request, 'home.html', context)
 
 def signup_view(request):
     error_msg=None
@@ -126,7 +141,7 @@ def cart_view(request):
 
     return render(request, 'cart.html', {'cart_items': cart_items, 'total_price': total_price})
 
-
+@login_required
 def add_to_cart(request, product_id):
     cart = request.session.get('cart', {})
     product_id = str(product_id)  
@@ -140,7 +155,7 @@ def add_to_cart(request, product_id):
     messages.success(request, f'{product.name} added to cart successfully')
     return redirect(request.META.get('HTTP_REFERER', 'home'))
 
-
+@login_required
 def remove_from_cart(request, product_id):
     cart = request.session.get('cart', {})
     product_id = str(product_id)
@@ -154,6 +169,8 @@ def remove_from_cart(request, product_id):
         messages.error(request, f'{product.name} not found in cart')
     return redirect('cart')
 
+
+@login_required
 def increase_quantity(request, product_id):
     cart = request.session.get('cart', {})
     product_key = str(product_id)
@@ -167,6 +184,7 @@ def increase_quantity(request, product_id):
     
     return redirect('cart')
 
+@login_required
 def decrease_quantity(request, product_id):
     cart = request.session.get('cart', {})
     product_key = str(product_id)
@@ -184,6 +202,7 @@ def decrease_quantity(request, product_id):
     
     return redirect('cart')
 
+@login_required
 def checkout_view(request):
     if not request.user.is_authenticated:
         messages.error(request, 'Please login to checkout')
